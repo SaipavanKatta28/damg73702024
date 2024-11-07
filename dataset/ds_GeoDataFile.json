@@ -5,12 +5,6 @@
 			"referenceName": "ls_stgfall2024damg7370",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"FileName": {
-				"type": "string",
-				"defaultValue": "Seattle_Pet_Licenses.tsv"
-			}
-		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
@@ -21,6 +15,7 @@
 				"fileSystem": "bronze"
 			},
 			"columnDelimiter": ",",
+			"compressionCodec": "snappy",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
