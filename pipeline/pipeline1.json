@@ -51,7 +51,10 @@
 						"referenceName": "df_location_dim",
 						"type": "DataFlowReference",
 						"parameters": {
-							"DI_JOB_ID": "\"59\""
+							"DI_JOB_ID": {
+								"value": "'@{pipeline().RunId}'",
+								"type": "Expression"
+							}
 						}
 					},
 					"compute": {
