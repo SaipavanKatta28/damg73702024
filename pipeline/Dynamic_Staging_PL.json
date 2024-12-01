@@ -18,7 +18,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select name as table_name from sys.tables where type = 'U'",
+							"value": "select t.name as table_name, s.name as schema_name\nfrom sys.tables t join sys.schemas s\non t.schema_id = s.schema_id\nwhere type='U'\nand s.name= '@{pipeline().parameters.sname}';",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -53,7 +53,7 @@
 						"type": "Expression"
 					},
 					"isSequential": false,
-					"batchCount": 10,
+					"batchCount": 5,
 					"activities": [
 						{
 							"name": "SourceTable2Parquet",
@@ -119,6 +119,62 @@
 											"type": "Expression"
 										}
 									}
+								}
+							]
+						},
+						{
+							"name": "Paquet2Snowfalke",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "SourceTable2Parquet",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.00:30:00",
+								"retry": 2,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "ParquetSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "ParquetReadSettings"
+									}
+								},
+								"sink": {
+									"type": "SnowflakeV2Sink",
+									"importSettings": {
+										"type": "SnowflakeImportCopyCommand"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_Parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"Directory": "na",
+										"FileName": "@concat(     item().table_name,'.parquet' )"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SnowflakeTable1",
+									"type": "DatasetReference"
 								}
 							]
 						}
