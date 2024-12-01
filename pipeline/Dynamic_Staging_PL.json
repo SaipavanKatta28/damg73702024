@@ -174,7 +174,14 @@
 							"outputs": [
 								{
 									"referenceName": "SnowflakeTable1",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"schema_name": "PUBLIC",
+										"table_name": {
+											"value": "@toUpper(item().table_name)",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
