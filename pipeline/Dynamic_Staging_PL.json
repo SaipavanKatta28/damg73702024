@@ -125,14 +125,9 @@
 						{
 							"name": "Paquet2Snowfalke",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "SourceTable2Parquet",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [],
 							"policy": {
 								"timeout": "0.00:30:00",
 								"retry": 2,
@@ -167,7 +162,10 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"Directory": "na",
-										"FileName": "@concat(     item().table_name,'.parquet' )"
+										"FileName": {
+											"value": "@concat(item().table_name,'.parquet')",
+											"type": "Expression"
+										}
 									}
 								}
 							],
@@ -181,6 +179,72 @@
 											"value": "@toUpper(item().table_name)",
 											"type": "Expression"
 										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Parquet2Staging",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "SourceTable2Parquet",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.00:30:00",
+								"retry": 2,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "ParquetSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "ParquetReadSettings"
+									}
+								},
+								"sink": {
+									"type": "SnowflakeV2Sink",
+									"importSettings": {
+										"type": "SnowflakeImportCopyCommand"
+									}
+								},
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
+										"referenceName": "ls_stgblobdamg7370",
+										"type": "LinkedServiceReference"
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_Parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"Directory": "na",
+										"FileName": "@concat(item().table_name,'.parquet')"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SnowflakeTable1",
+									"type": "DatasetReference",
+									"parameters": {
+										"schema_name": "PUBLIC",
+										"table_name": "@toUpper(item().table_name)"
 									}
 								}
 							]
