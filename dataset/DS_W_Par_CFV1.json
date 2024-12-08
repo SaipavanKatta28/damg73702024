@@ -1,0 +1,19 @@
+{
+	"name": "DS_W_Par_CFV1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_stgfall2024damg7370",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "silver"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
