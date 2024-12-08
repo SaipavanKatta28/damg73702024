@@ -22,7 +22,7 @@
 				"fileName": "Contributing Factor Mappingv1.tsv",
 				"fileSystem": "bronze"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": "\t",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
