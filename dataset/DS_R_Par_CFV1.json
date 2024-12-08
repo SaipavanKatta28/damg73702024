@@ -1,0 +1,20 @@
+{
+	"name": "DS_R_Par_CFV1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_stgfall2024damg7370",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Contributing Factor Mappingv1.parquet",
+				"fileSystem": "silver"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
